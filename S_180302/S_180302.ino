@@ -1,9 +1,9 @@
-#include <Wire.h>									//разделить spi нет
+#include <Wire.h>									//разделить spi нет 
 #include <iarduino_RTC.h>
 #include <SPI.h>
 #include <SD.h>
-const uint8_t PIN_CS = 10;                            // номер вывода CS адаптера
-const int btn_Watering = 2;                              // номер входа, подключенный к кнопке "полив"
+const uint8_t PIN_CS = 10;                            // номер вывода CS адаптера SD ++
+const int btn_Watering = 3;                              // номер входа, подключенный к кнопке "полив"
 int buttonState = 0;                                   // переменная для хранения состояния кнопки "полив"
 int sensorPin_A = 0;
 int sensorValue_A = 0;
@@ -14,8 +14,7 @@ int sensorValue_C = 0;
 int power_A = 5;
 int power_B = 6;
 int power_C = 7;
-char Str01[4] = "15";
-int cat = 0;
+int time_r = 0;
 File myFile;                                          // создаём переменную myFile
 iarduino_RTC time(RTC_DS3231);
 void setup()
@@ -26,7 +25,7 @@ void setup()
 	pinMode(power_A, OUTPUT);
 	pinMode(power_B, OUTPUT);
 	pinMode(power_C, OUTPUT);
-
+	
 	Serial.begin(9600);                               // открываем порт
 	while (!Serial) { ; }
 	Serial.println("open my port");
@@ -34,36 +33,27 @@ void setup()
 	{
 		myFile.println("SD-card not found");
 		Serial.println("SD-card not found");			// ошибка инициализации. карта не обнаружена или не подключён (неправильно подключён) адаптер карт MicroSD
-	}
-											 
-	myFile = SD.open("iarduino.txt", FILE_WRITE);
-	if (SD.exists("iarduino.txt")) {
-		Serial.println("iarduino.txt exists.");
-	}
-	else {
-		Serial.println("iarduino.txt doesn't exist.");
-	}
+	}					 
 }
 
 void loop()
 {
-
-
-
-
+	myFile = SD.open("iarduino.txt", FILE_WRITE);
 	buttonState = digitalRead(btn_Watering);                  // считываем значения с входа кнопки "полив"
 	if (buttonState == HIGH)                                // проверяем нажата ли кнопка
 	{
+		Serial.println(";;; Watering;");
 		myFile.print(time.gettime("d-m-Y; H:i:s"));          // выводим время   
 		myFile.println(";;; Watering;");                       // пишем "Полив"   
 		delay(500);
 	}
+
 	Serial.println(time.gettime("s"));
-		delay(500);
-		time.gettime();
-		cat = time.seconds;
+	delay(500);
+	time.gettime();
+	time_r = time.seconds;
 		
-	if (cat == 00 || cat == 30)								// если прошла 60 секунда
+	if (time_r == 00)								// если прошла 60 секунда
 	{ 
 		Serial.println("ok time");
 
@@ -91,5 +81,5 @@ void loop()
 		digitalWrite(power_B, LOW);
 		digitalWrite(power_C, LOW);
 	}
-	myFile.close();													// закрываем файл
+		myFile.close();													// закрываем файл
 }
