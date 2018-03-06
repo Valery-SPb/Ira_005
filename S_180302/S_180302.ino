@@ -1,4 +1,4 @@
-#include <Wire.h>									//разделить spi
+#include <Wire.h>									//разделить spi нет
 #include <iarduino_RTC.h>
 #include <SPI.h>
 #include <SD.h>
