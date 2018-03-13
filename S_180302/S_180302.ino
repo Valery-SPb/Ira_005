@@ -1,4 +1,4 @@
-#include <Wire.h>									//разделить spi нет 
+#include <Wire.h>									//разделить spi 180318 - работает вторая кнопка
 #include <iarduino_RTC.h>
 #include <LiquidCrystal_I2C.h>
 #include <SPI.h>
@@ -58,7 +58,7 @@ void loop()
 	if (btn_state_view == HIGH)                                // проверяем нажата ли кнопка
 	{
 		lcd.noBacklight();
-		Serial.println("view");
+		Serial.println("view2");
 		lcd.init();
 		lcd.backlight();// Включаем подсветку дисплея
 		lcd.print("iarduino.ru");
