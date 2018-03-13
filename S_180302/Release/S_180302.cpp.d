@@ -20,6 +20,8 @@ C:\Users\Valery\AppData\Local\Temp\VMBuilds\S_180302\uno\Release\S_180302.cpp.o:
  C:\Program\ Files\ (x86)\Arduino\libraries\iarduino_RTC\src/iarduino_RTC_DS1307.h \
  C:\Program\ Files\ (x86)\Arduino\libraries\iarduino_RTC\src/iarduino_RTC_I2C.h \
  C:\Program\ Files\ (x86)\Arduino\libraries\iarduino_RTC\src/iarduino_RTC_DS3231.h \
+ D:\Documents\Arduino\libraries\LiquidCrystal_I2C_V112/LiquidCrystal_I2C.h \
+ C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Print.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\libraries\SPI\src/SPI.h \
  C:\Program\ Files\ (x86)\Arduino\libraries\SD\src/SD.h \
  C:\Program\ Files\ (x86)\Arduino\libraries\SD\src/utility/SdFat.h \
@@ -27,5 +29,4 @@ C:\Users\Valery\AppData\Local\Temp\VMBuilds\S_180302\uno\Release\S_180302.cpp.o:
  C:\Program\ Files\ (x86)\Arduino\libraries\SD\src/utility/Sd2PinMap.h \
  C:\Program\ Files\ (x86)\Arduino\libraries\SD\src/utility/SdInfo.h \
  C:\Program\ Files\ (x86)\Arduino\libraries\SD\src/utility/FatStructs.h \
- C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Print.h \
  C:\Program\ Files\ (x86)\Arduino\libraries\SD\src/utility/SdFatUtil.h
