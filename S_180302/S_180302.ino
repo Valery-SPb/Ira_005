@@ -11,17 +11,20 @@ int btn_state_watering = 0;								// переменная для хранения состояния кнопки "
 int btn_state_view = 0;									// переменная для хранения состояния кнопки "показать"
 
 int sensorPin_A = 0;
-int sensorValue_A = 0;
 int sensorPin_B = 1;
-int sensorValue_B = 0;
 int sensorPin_C = 2;
+
+int sensorValue_A = 0;
+int sensorValue_B = 0;
 int sensorValue_C = 0;
 
 int power_A = 5;
 int power_B = 6;
 int power_C = 7;
+
 int time_r = 0;
 int x = 0;												// временная пер для проверки нарастания кнопки
+
 File myFile;											// создаём переменную myFile
 iarduino_RTC time(RTC_DS3231);
 LiquidCrystal_I2C lcd(0x3F, 16, 2);						// Устанавливаем дисплей
@@ -63,18 +66,15 @@ void loop()
 	if (btn_state_view == HIGH)							// проверяем нажата ли кнопка
 	{
 		x = x + 1;
-
 		lcd.noBacklight();
 		Serial.println(x);
 		lcd.init();
 		lcd.backlight();
 		lcd.print(x);
-			
 	}
 
 	if (x == 3) {
-		x = 0;
-	
+		x = 0;	
 	}
 		//{
 		//	lcd.noBacklight();
@@ -100,14 +100,13 @@ void loop()
 			digitalWrite(power_B, HIGH);
 			digitalWrite(power_C, HIGH);
 			delay(100);
-			sensorValue_A = analogRead(sensorPin_A);
+			sensorValue_A = analogRead(sensorPin_A); 
 			sensorValue_B = analogRead(sensorPin_B);
 			sensorValue_C = analogRead(sensorPin_C);
 
 			Serial.println(time.gettime("d-m-Y; H:i:s"));
 			Serial.println(sensorValue_A);
-
-
+			
 			myFile.print(time.gettime("d-m-Y; H:i:s"));		// выводим время
 			myFile.print("; ");
 			myFile.print(sensorValue_A);
@@ -116,6 +115,7 @@ void loop()
 			myFile.print("; ");
 			myFile.print(sensorValue_C);
 			myFile.println("; ");
+
 			digitalWrite(power_A, LOW);						// выключаем питание на датчиках
 			digitalWrite(power_B, LOW);
 			digitalWrite(power_C, LOW);
