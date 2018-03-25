@@ -9,21 +9,8 @@ const uint8_t btn_view = 4;								// номер входа, подключенный к кнопке "показа
 
 int btn_state_watering = 0;								// переменная для хранения состояния кнопки "полив"
 int btn_state_view = 0;									// переменная для хранения состояния кнопки "показать"
-
-int sensorPin_A = 0;
-int sensorPin_B = 1;
-int sensorPin_C = 2;
-
-int sensorValue_A = 0;
-int sensorValue_B = 0;
-int sensorValue_C = 0;
-
-int power_A = 5;
-int power_B = 6;
-int power_C = 7;
-
-int time_r = 0;
-int x = 0;												// временная пер для проверки нарастания кнопки
+int time_s = 0;
+int tm = 0;
 
 File myFile;											// создаём переменную myFile
 iarduino_RTC time(RTC_DS3231);
@@ -35,17 +22,17 @@ void setup()
 	Wire.begin();
 	pinMode(btn_watering, INPUT);						// инициализируем пин, подключенный к кнопке, как вход
 	pinMode(btn_view, INPUT);							// инициализируем пин, подключенный к кнопке, как вход
-	pinMode(power_A, OUTPUT);
-	pinMode(power_B, OUTPUT);
-	pinMode(power_C, OUTPUT);
+	
 	Serial.begin(9600);									// открываем порт
 	while (!Serial) { ; }
 	Serial.println("open my port");
 	if (!SD.begin(PIN_CS))								// инициализация SD карты с указанием номера вывода CS  
 	{
-		myFile.println("SD-card not found");
-		Serial.println("SD-card not found");			// ошибка инициализации карты
+		myFile.println("SD-card not found");			// ошибка инициализации карты
+		Serial.println("SD-card not found");
 	}					 
+			lcd.init();
+			lcd.noBacklight();
 }
 
 void loop()
@@ -57,69 +44,63 @@ void loop()
 	{
 		Serial.println(";;; Watering;");
 		myFile.print(time.gettime("d-m-Y; H:i:s"));		// выводим время   
-		myFile.println(";;; Watering;");				// пишем "Полив"   
+		myFile.println(";;; Watering;");				// пишем "Полив"
 		delay(500);
 	}
-
 
 	btn_state_view = digitalRead(btn_view);				// считываем значения с входа кнопки "показать"
 	if (btn_state_view == HIGH)							// проверяем нажата ли кнопка
 	{
-		x = x + 1;
-		lcd.noBacklight();
-		Serial.println(x);
-		lcd.init();
-		lcd.backlight();
-		lcd.print(x);
+		int measur_arr[3];
+		int k;
+		for (k = 0; k < 3; k = k + 1) {
+			measur_arr[k] = measurement(k);
+			Serial.print(measur_arr[k]);
+			Serial.print("%; ");
+			lcd.backlight();
+			lcd.print(measur_arr[k]);
+			lcd.print("%; ");
+		}
+			delay(5000);
+			lcd.clear();
+			lcd.noBacklight();
 	}
-
-	if (x == 3) {
-		x = 0;	
-	}
-		//{
-		//	lcd.noBacklight();
-		//	Serial.println("view2");
-		//	lcd.init();
-		//	lcd.backlight();								// Включаем подсветку дисплея
-		//	lcd.print("view2");
-		//	lcd.setCursor(8, 1);
-		//	lcd.print("LCD 1602");
-		//	delay(500);
-		//}
-
+				
 		Serial.println(time.gettime("s"));
 		delay(500);
 		time.gettime();
-		time_r = time.seconds;
-
-		if (time_r == 00)									// если прошла 60 секунда
+		time_s = time.seconds;
+		
+		if (time_s == 00 && tm!= time_s)									// если прошла 60 секунда
 		{
+			tm = time_s;
 			Serial.println("ok time");
-
-			digitalWrite(power_A, HIGH);					// включаем питание на датчиках
-			digitalWrite(power_B, HIGH);
-			digitalWrite(power_C, HIGH);
-			delay(100);
-			sensorValue_A = analogRead(sensorPin_A); 
-			sensorValue_B = analogRead(sensorPin_B);
-			sensorValue_C = analogRead(sensorPin_C);
-
-			Serial.println(time.gettime("d-m-Y; H:i:s"));
-			Serial.println(sensorValue_A);
-			
 			myFile.print(time.gettime("d-m-Y; H:i:s"));		// выводим время
-			myFile.print("; ");
-			myFile.print(sensorValue_A);
-			myFile.print("; ");
-			myFile.print(sensorValue_B);
-			myFile.print("; ");
-			myFile.print(sensorValue_C);
-			myFile.println("; ");
+			Serial.println(time.gettime("d-m-Y; H:i:s"));
 
-			digitalWrite(power_A, LOW);						// выключаем питание на датчиках
-			digitalWrite(power_B, LOW);
-			digitalWrite(power_C, LOW);
+			int measur_arr[3];
+			int k;
+			for (k = 0; k < 3; k = k + 1) {
+				measur_arr[k] = measurement(k);
+				Serial.print(measur_arr[k]);
+				Serial.print("; ");
+				myFile.print(measur_arr[k]);
+				myFile.print("; ");
+			}
 		}
 		myFile.close();									// закрываем файл
-	
 }
+
+ int measurement(int i) {
+	 int power[3] = { 5, 6, 7 };
+	 int sensorPin[3] = { 2, 1, 0 };
+	 int sensorValue;
+	 pinMode(power[i], OUTPUT);
+	 digitalWrite(power[i], HIGH);
+	 delay(100);
+	 sensorValue = analogRead(sensorPin[i]);
+	 sensorValue = (1024 - sensorValue) / 10;
+	 digitalWrite(power[i], LOW);
+	 return sensorValue;
+ }
+
