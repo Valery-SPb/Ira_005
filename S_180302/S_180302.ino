@@ -1,7 +1,8 @@
-#include <Wire.h>										//ready to exp
+#include <Wire.h>										//go to exp
 #include <LiquidCrystal_I2C.h>
 #include <SPI.h>
 #include <SD.h>
+#include <iarduino_RTC.h>
 const uint8_t PIN_CS = 10;								// номер вывода CS адаптера SD ++
 const uint8_t btn_watering = 3;							// номер входа, подключенный к кнопке "полив"
 const uint8_t btn_view = 4;								// номер входа, подключенный к кнопке "показать"
